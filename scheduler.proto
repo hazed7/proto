@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package scheduler;
+
+option go_package = "github.com/hazed7/proto/scheduler;scheduler";
+
+import "common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service SchedulerService {
+  rpc CreateEvent(CreateEventRequest) returns (CreateEventResponse);
+  rpc UpdateEvent(UpdateEventRequest) returns (google.protobuf.Empty);
+  rpc DeleteEvent(DeleteEventRequest) returns (google.protobuf.Empty);
+  rpc GetEvents(GetEventsRequest) returns (GetEventsResponse);
+  rpc CheckConflicts(CheckConflictsRequest) returns (CheckConflictsResponse);
+}
+
+enum EventType {
+  EVENT_UNSPECIFIED = 0;
+  CLASS = 1;
+  TEST = 2;
+  EVENT = 3;
+  HACKATHON = 4;
+}
+
+message CreateEventRequest {
+  string title = 1;
+  EventType type = 2;
+  google.protobuf.Timestamp start_time = 3;
+  google.protobuf.Timestamp end_time = 4;
+  string location = 5;
+  repeated string participant_ids = 6;
+  string created_by = 7;
+  repeated common.Track track = 8;
+}
+
+message CreateEventResponse {
+  string event_id = 1;
+}
+
+message UpdateEventRequest {
+  string event_id = 1;
+  string title = 2;
+  EventType type = 3;
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  string location = 6;
+  repeated string participant_ids = 7;
+  repeated common.Track track = 8;
+}
+
+message DeleteEventRequest {
+  string event_id = 1;
+}
+
+message GetEventsRequest {
+  string user_id = 1;
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+  repeated common.Track track = 4;
+}
+
+message GetEventsResponse {
+  repeated Event events = 1;
+}
+
+message CheckConflictsRequest {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+  repeated string participant_ids = 3;
+  repeated common.Track track = 4;
+}
+
+message CheckConflictsResponse {
+  bool has_conflicts = 1;
+  repeated Event conflicting_events = 2;
+}
+
+message Event {
+  string event_id = 1;
+  string title = 2;
+  EventType type = 3;
+  google.protobuf.Timestamp start_time = 4;
+  google.protobuf.Timestamp end_time = 5;
+  string location = 6;
+  repeated string participant_ids = 7;
+  string created_by = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  repeated common.Track track = 11;
+}

@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/hazed7/proto/auth;auth";
+
+import "common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service AuthService {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+    rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+    rpc AssignRole(AssignRoleRequest) returns (google.protobuf.Empty);
+    rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+}
+
+message RegisterRequest {
+    string first_name = 1;
+    string last_name = 2;
+    string email = 3;
+    string password = 4;
+    common.Gender gender = 5;
+    common.Track track = 6;
+}
+
+message RegisterResponse {
+    string user_id = 1;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+    google.protobuf.Timestamp expires_at = 3;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+    google.protobuf.Timestamp expires_at = 3;
+}
+
+message LogoutRequest {
+    string refresh_token = 1;
+}
+
+message ValidateTokenRequest {
+    string access_token = 1;
+}
+
+message ValidateTokenResponse {
+    string user_id = 1;
+    repeated common.UserRole roles = 2;
+    google.protobuf.Timestamp expires_at = 3;
+}
+
+message AssignRoleRequest {
+    string user_id = 1;
+    common.UserRole role = 2;
+}
+
+message CheckPermissionRequest {
+    string user_id = 1;
+    string permission = 2;
+}
+
+message CheckPermissionResponse {
+    bool allowed = 1;
+}

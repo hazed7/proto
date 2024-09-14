@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package reporting;
+
+option go_package = "github.com/hazed7/proto/reporting;reporting";
+
+import "common.proto";
+import "google/protobuf/timestamp.proto";
+
+service ReportingService {
+  rpc GeneratePerformanceReport(PerformanceReportRequest) returns (PerformanceReportResponse);
+  rpc GenerateAttendanceReport(AttendanceReportRequest) returns (AttendanceReportResponse);
+  rpc ScheduleReport(ScheduleReportRequest) returns (ScheduleReportResponse);
+  rpc GetScheduledReports(GetScheduledReportsRequest) returns (GetScheduledReportsResponse);
+}
+
+message PerformanceReportRequest {
+  string student_id = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+  common.Track track = 4;
+}
+
+message PerformanceReportResponse {
+  string report_id = 1;
+  string report_url = 2;
+}
+
+message AttendanceReportRequest {
+  common.Track track = 1;
+  google.protobuf.Timestamp start_date = 2;
+  google.protobuf.Timestamp end_date = 3;
+}
+
+message AttendanceReportResponse {
+  string report_id = 1;
+  string report_url = 2;
+}
+
+message ScheduleReportRequest {
+  string report_type = 1;
+  google.protobuf.Timestamp scheduled_time = 2;
+  string parameters = 3; // json string of parameters
+  string created_by = 4;
+  common.Track track = 5;
+}
+
+message ScheduleReportResponse {
+  string schedule_id = 1;
+}
+
+message GetScheduledReportsRequest {
+  string user_id = 1;
+}
+
+message GetScheduledReportsResponse {
+  repeated ScheduledReport scheduled_reports = 1;
+}
+
+message ScheduledReport {
+  string schedule_id = 1;
+  string report_type = 2;
+  google.protobuf.Timestamp scheduled_time = 3;
+  string parameters = 4;
+  string created_by = 5;
+  google.protobuf.Timestamp created_at = 6;
+  common.Track track = 7;
+}

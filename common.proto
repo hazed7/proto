@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "github.com/hazed7/proto/common;common";
+
+message ErrorResponse {
+    string code = 1;
+    string message = 2;
+}
+
+enum Gender {
+    MALE = 0;
+    FEMALE = 1;
+}
+
+enum UserRole {
+    STUDENT = 0;
+    TEACHER = 1;
+    ADMIN = 2;
+}
+
+enum UserStatus {
+    ACTIVE = 0;
+    INACTIVE = 1;
+    DELETED = 2;
+}
+
+enum Track {
+    AI = 0;
+    BIG_DATA = 1;
+    ANDROID_DEV = 2;
+    IOT = 3;
+}
+
+message PaginationRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+}
+
+message PaginationResponse {
+    int32 page = 1;
+    int32 page_size = 2;
+    int32 total_pages = 3;
+    int32 total_items = 4;
+}

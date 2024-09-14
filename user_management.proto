@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package user_management;
+
+option go_package = "github.com/hazed7/proto/user_management;user_management";
+
+import "common.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty);
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+    rpc AddTeacher(AddTeacherRequest) returns (AddTeacherResponse);
+    rpc AdminAccess(AdminAccessRequest) returns (google.protobuf.Empty);
+}
+
+message GetUserRequest {
+    string user_id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message UpdateUserRequest {
+    string user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    common.Gender gender = 4;
+    string contact_number = 5;
+    string address = 6;
+    common.Track track = 7;
+}
+
+message DeleteUserRequest {
+    string user_id = 1;
+}
+
+message ListUsersRequest {
+    common.PaginationRequest pagination = 1;
+    common.UserRole role = 2;
+    common.Track track = 3; // filter by track
+}
+
+message ListUsersResponse {
+    repeated User users = 1;
+    common.PaginationResponse pagination = 2;
+}
+
+message AddTeacherRequest {
+    string first_name = 1;
+    string last_name = 2;
+    string email = 3;
+    string password = 4;
+    repeated common.Track tracks = 5;
+}
+
+message AddTeacherResponse {
+    string teacher_id = 1;
+}
+
+message AdminAccessRequest {
+    string admin_user_id = 1;
+}
+
+message User {
+    string user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string email = 4;
+    common.Gender gender = 5;
+    common.UserRole role = 6;
+    common.UserStatus status = 7;
+    string contact_number = 8;
+    string address = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+    common.Track track = 12; // students
+    repeated common.Track tracks = 13; // teachers who teach multiple tracks
+}
